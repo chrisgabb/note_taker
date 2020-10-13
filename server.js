@@ -5,6 +5,17 @@ const fs = require("fs");
 var noteArr = require("./db/db.json")
 var notePath = "/db/db.json"
 
+class Todo {
+    constructor(title, text, id) {
+      this.title = title;
+      this.text = text;
+      Todo.lastId++;
+      this.id = Todo.lastId;
+    }
+  }
+  Todo.lastId = 0;
+
+
 const PORT = process.env.PORT || 8080;
 // // Reading and Writing variables for the notes, db.json doc
 app.use(express.urlencoded({ extended: true }));
@@ -25,8 +36,7 @@ app.get('/api/notes', function(req, res) {
 });
 
 app.post('/api/notes', function(req, res) {
-    addNote = req.body
-    addNote.id = noteArr.length + 1
+    let addNote = new Todo (req.body.title, req.body.text);
     noteArr.push(addNote)
     fs.writeFileSync(__dirname + notePath, JSON.stringify(req.body), (err) => {})
     res.json(addNote);
@@ -35,7 +45,6 @@ app.post('/api/notes', function(req, res) {
 app.delete('/api/notes/:id', function(req, res) {
     let id = parseInt(req.params.id);
     noteArr = noteArr.filter(note =>  note.id !== id)
-    noteArr.forEach(note => note.id = noteArr.indexOf(note) + 1)
     fs.writeFileSync(__dirname + notePath, JSON.stringify(noteArr), (err) => {})
     res.json(noteArr);
 })

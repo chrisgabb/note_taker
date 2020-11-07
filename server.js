@@ -36,16 +36,16 @@ app.get('/api/notes', function(req, res) {
 });
 
 app.post('/api/notes', function(req, res) {
-    let addNote = new Todo (req.body.title, req.body.text);
+    var addNote = new Todo (req.body.title, req.body.text);
     noteArr.push(addNote)
-    fs.writeFileSync(__dirname + notePath, JSON.stringify(req.body), (err) => {})
+    fs.writeFile(__dirname + notePath, JSON.stringify(noteArr), (err) => {})
     res.json(addNote);
 });
 
 app.delete('/api/notes/:id', function(req, res) {
     let id = parseInt(req.params.id);
     noteArr = noteArr.filter(note =>  note.id !== id)
-    fs.writeFileSync(__dirname + notePath, JSON.stringify(noteArr), (err) => {})
+    fs.writeFile(__dirname + notePath, JSON.stringify(noteArr), (err) => {})
     res.json(noteArr);
 })
 
